@@ -90,34 +90,5 @@ def create_insert_city_states_provinces():
 
 create_insert_city_states_provinces()
 
-population_df = pd.read_csv('iod-02211-provincial-population-distribution-percent-f.csv')
 
-# Remove Old Data
-
-population_df.drop(['۱۳۹۵-توزیع', '۱۳۹۵-رتبه',
-                    '۱۳۹۶-جمعیت', '۱۳۹۶-رتبه',
-                    '۱۳۹۷-جمعیت', '۱۳۹۷-رتبه',
-                    '۱۳۹۸-جمعیت', '۱۳۹۸-رتبه'], axis=1, inplace=True)
-
-total_population_province = pd.read_csv('population-country-by-province-1398-fa.csv')
-
-province_data = session.query(Province).all()
-
-for index, prov in enumerate(province_data):
-    test = population_df.loc[population_df['استان'] == prov.province_name]
-    print(test['۱۳۹۹ -جمعیت'])
-    for item in test['۱۳۹۹ -رتبه']:
-        print(item)
-    prov.population_rank = test['۱۳۹۹ -رتبه']
-    prov.population_ratio = test['۱۳۹۹ -رتبه']
-    session.commit()
-
-for (index, value) in total_population_province.iterrows():
-    this_province = value['استان‌ها']
-    find_province = session.query(Province).filter_by(province_name=this_province).first()
-    if find_province:
-        find_province.population = int(value['نفر'])
-        session.commit()
-
-session.close()
 
